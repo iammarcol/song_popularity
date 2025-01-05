@@ -54,4 +54,51 @@ This provides a perceptual measure of loudness as it is heard by human listeners
 By combining these features with others such as tempo and key, we ensured a comprehensive analysis of the audio's characteristics, which was critical for evaluating and predicting the desired outcomes.
 ​
 
-### ✅Deployment and Monitoring:
+### ✅How to run:
+
+Follow the steps below to install, configure, and run the Flask application on your local machine:
+
+1. Clone the Repository
+Download the project code:
+
+git clone https://github.com/iammarcol/song_popularity.git
+cd song_popularity
+
+2. Set Up a Virtual Environment
+
+conda create --name song_popularity_env python=3.10 -y
+conda activate song_popularity_env
+
+3. Install Dependencies
+
+Install the required Python libraries using the following command:
+pip install -r requirements.txt
+
+4. Ensure Required Files Are Present
+
+Ensure the following files are present in the model/ directory:
+
+xgb_popularity_model.json: The pretrained model file.
+scaler.joblib: The scaler file for feature preprocessing.
+
+5. Run the Application
+
+Start the Flask application by running:
+python app.py
+
+6. Open the Web Application
+
+Open a web browser and navigate to the following URL:
+
+http://127.0.0.1:5000
+
+7. Upload an Audio File
+
+Use the upload form to submit an MP3 or WAV file for prediction.
+The application will process the file and display the predicted popularity score.
+
+An example output is given here:
+
+​![pic4](output_example.png)
+
+To stop the Flask server, press CTRL+C in the terminal.
