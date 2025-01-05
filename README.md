@@ -61,31 +61,33 @@ Follow the steps below to install, configure, and run the Flask application on y
 1. Clone the Repository
 Download the project code:
 
-git clone https://github.com/iammarcol/song_popularity.git
+```git clone https://github.com/iammarcol/song_popularity.git
 cd song_popularity
-
+```
 2. Set Up a Virtual Environment
-
+```
 conda create --name song_popularity_env python=3.10 -y
 conda activate song_popularity_env
-
+```
 3. Install Dependencies
 
 Install the required Python libraries using the following command:
+```
 pip install -r requirements.txt
-
+```
 4. Ensure Required Files Are Present
 
 Ensure the following files are present in the model/ directory:
 
-xgb_popularity_model.json: The pretrained model file.
-scaler.joblib: The scaler file for feature preprocessing.
+**xgb_popularity_model.json:** The pretrained model file.
+**scaler.joblib:** The scaler file for feature preprocessing.
 
 5. Run the Application
 
 Start the Flask application by running:
+```
 python app.py
-
+```
 6. Open the Web Application
 
 Open a web browser and navigate to the following URL:
