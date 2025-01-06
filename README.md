@@ -22,12 +22,12 @@ Random Forest, optimized with oneAPI, emerged as the most efficient and accurate
 
 Gather historical Spotify song data, including features such as song tempo, energy, key, loudness, mode and duration. We have performed an EDA (Exploratory Data Analysis) and found that there was no missing values and other data discrepancies. Data was split in 80/20 ratio for model training and testing.
 
-🎶 Energy: A measure of intensity and activity in a song.
-🎶 Key: The musical key of the song.
-🎶 Loudness: The overall loudness level of the song, in decibels.
-🎶 Mode: Indicates whether the song is in a major or minor mode.
-🎶 Tempo: The speed or pace of the song, measured in beats per minute (BPM).
-🎶 Duration_ms: The duration of the song, in milliseconds.
+🎶 Energy: A measure of intensity and activity in a song.  
+🎶 Key: The musical key of the song.  
+🎶 Loudness: The overall loudness level of the song, in decibels.  
+🎶 Mode: Indicates whether the song is in a major or minor mode.  
+🎶 Tempo: The speed or pace of the song, measured in beats per minute (BPM).  
+🎶 Duration_ms: The duration of the song, in milliseconds.  
 
 ​![pic0](feature_importance.png)
 
