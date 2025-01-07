@@ -7,37 +7,47 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
+            margin: 0;
+            padding: 0;
             background-color: #f9f9f9;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
         }
         h1 {
             font-size: 2.5em;
             color: #444;
+            margin-bottom: 20px;
         }
-        #form {
-            display: inline-block;
-            text-align: left;
-            padding: 20px;
-            border: 1px solid #ddd;
+        #form-container {
+            width: 100%;
+            max-width: 400px;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         label {
             font-size: 1.1em;
             color: #555;
         }
         input[type="file"] {
-            margin-top: 10px;
-            margin-bottom: 20px;
+            width: 100%;
+            margin: 15px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         button {
+            width: 100%;
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 1em;
             border-radius: 5px;
             cursor: pointer;
@@ -45,10 +55,25 @@
         }
         button:hover {
             background-color: #45a049;
-            transform: scale(1.05);
+            transform: scale(1.03);
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
         #result {
             margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .loading {
+            font-size: 1em;
+            color: #888;
         }
         audio {
             margin-top: 20px;
@@ -60,39 +85,64 @@
 </head>
 <body>
     <h1>Audio Popularity Predictor</h1>
-    <form id="form" action="/predict" method="post" enctype="multipart/form-data">
-        <label for="file">Upload an MP3 or WAV file:</label><br><br>
-        <input type="file" id="file" name="file" accept=".mp3,.wav" required><br><br>
-        <button type="submit">Submit</button>
-    </form>
-    <div id="result"></div>
-    
+    <div id="form-container">
+        <form id="form" action="/predict" method="post" enctype="multipart/form-data">
+            <label for="file">Upload an MP3 or WAV file:</label><br>
+            <input type="file" id="file" name="file" accept=".mp3,.wav" required>
+            <button type="submit" id="submit-btn">Submit</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
     <script>
         document.getElementById("form").onsubmit = async (e) => {
             e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const fileInput = document.getElementById("file");
-            const uploadedFile = fileInput.files[0]; // Get the uploaded file
-            
-            const response = await fetch('/predict', {
-                method: 'POST',
-                body: formData
-            });
 
-            const result = await response.json();
+            const fileInput = document.getElementById("file");
             const resultDiv = document.getElementById("result");
-            
-            if (result.popularity_score) {
-                resultDiv.innerHTML = `
-                    <h2>Predicted Popularity Score: ${result.popularity_score}</h2>
-                    <audio controls>
-                        <source src="${URL.createObjectURL(uploadedFile)}" type="${uploadedFile.type}">
-                        Your browser does not support the audio element.
-                    </audio>
-                `;
-            } else {
-                resultDiv.innerHTML = `<h2>Error: ${result.error}</h2>`;
+            const submitButton = document.getElementById("submit-btn");
+            const uploadedFile = fileInput.files[0];
+
+            // Reset result display
+            resultDiv.innerHTML = "";
+
+            // File validation: Check file size
+            if (uploadedFile && uploadedFile.size > 10 * 1024 * 1024) { // 10 MB limit
+                resultDiv.innerHTML = `<p class="error">File size exceeds 10MB. Please upload a smaller file.</p>`;
+                return;
+            }
+
+            // Display loading indicator
+            resultDiv.innerHTML = `<p class="loading">Processing your file, please wait...</p>`;
+            submitButton.disabled = true;
+
+            // Prepare the form data for submission
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                // Display the result
+                if (result.popularity_score) {
+                    resultDiv.innerHTML = `
+                        <p class="success"><strong>Predicted Popularity Score: ${result.popularity_score}</strong></p>
+                        <audio controls>
+                            <source src="${URL.createObjectURL(uploadedFile)}" type="${uploadedFile.type}">
+                            Your browser does not support the audio element.
+                        </audio>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p class="error">Error: ${result.error || "An unknown error occurred."}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">Error: Could not connect to the server.</p>`;
+            } finally {
+                submitButton.disabled = false;
             }
         };
     </script>
